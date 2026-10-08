@@ -433,8 +433,6 @@ This experiment showed how multithreaded programs are built with **Pthreads** (e
 
 <div align="center">
 
-Made with ☕ and threads by **[chaitanya-m5](https://github.com/chaitanya-m5)**
-
-⭐ If you found this helpful, consider starring the repo!
+If you found this helpful, consider starring the repo!
 
 </div>
