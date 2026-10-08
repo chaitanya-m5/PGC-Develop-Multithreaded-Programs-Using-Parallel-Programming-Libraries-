@@ -1,14 +1,8 @@
 <div align="center">
 
-# ⚡ Multithreaded Programming with Pthreads & OpenMP
+# Multithreaded Programming with Pthreads & OpenMP
 
 ### Thread creation · Management · Work distribution · Race conditions · Synchronization · Coordination · Performance
-
-![C](https://img.shields.io/badge/Language-C-00599C?style=for-the-badge&logo=c&logoColor=white)
-![Pthreads](https://img.shields.io/badge/Library-Pthreads-blue?style=for-the-badge)
-![OpenMP](https://img.shields.io/badge/Library-OpenMP-orange?style=for-the-badge)
-![GCC](https://img.shields.io/badge/Compiler-GCC-green?style=for-the-badge)
-![WSL](https://img.shields.io/badge/Platform-WSL%20Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 **PGC Experiment 02 — Develop Multithreaded Programs Using Parallel Programming Libraries**
 
@@ -47,7 +41,7 @@ To develop multithreaded programs using **Pthreads** and **OpenMP**, and to unde
 
 ---
 
-## 💡 Basic Idea
+##  Basic Idea
 
 A **thread** is an execution path inside a program — think of it as a *worker*.
 
@@ -79,7 +73,7 @@ Several threads work on different parts of the same problem — that is **parall
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```text
 .
@@ -104,11 +98,11 @@ Several threads work on different parts of the same problem — that is **parall
 └── README.md
 ```
 
-> 📝 Adjust file locations above if your folders are organised slightly differently.
+> Adjust file locations above if your folders are organised slightly differently.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # 1. Open WSL from PowerShell
@@ -133,7 +127,7 @@ gcc -fopenmp --version
 
 ---
 
-## 🧵 Part A — Pthreads
+## Part A — Pthreads
 
 POSIX Threads give **explicit** control over threads using:
 `pthread_create()` · `pthread_join()` · `pthread_mutex_lock()` · `pthread_mutex_unlock()`
@@ -174,7 +168,7 @@ Hello from Thread 3
 All threads have finished.
 ```
 
-> ⚠️ **Thread execution order is not guaranteed.** The OS scheduler decides it.
+>  **Thread execution order is not guaranteed.** The OS scheduler decides it.
 
 ### Step 3 — Divide work among threads (`thread_sum.c`)
 
@@ -188,14 +182,14 @@ Array `{10, 20, 30, 40, 50, 60, 70, 80}` is split among 4 threads.
 | 4 | 70 + 80 | **150** |
 | **Total** | | **360** |
 
-### Step 4 — Race condition (`race.c`) 🐛
+### Step 4 — Race condition (`race.c`) 
 
 Four threads each do `counter++` 100,000 times on a shared variable, with no protection.
 
 | Run | Expected | Actual |
 |:---:|:---:|:---:|
-| 1 | 400000 | 167739 ❌ |
-| 2 | 400000 | 131342 ❌ |
+| 1 | 400000 | 167739 |
+| 2 | 400000 | 131342 |
 
 **Why?** Two threads can read the same value and both write back the same result:
 
@@ -205,7 +199,7 @@ Thread 1 reads 10      Thread 2 reads 10
 Thread 1 writes 11     Thread 2 writes 11     → expected 12, got 11 (lost update)
 ```
 
-### Step 5 — Fix with a mutex (`mutex.c`) 🔒
+### Step 5 — Fix with a mutex (`mutex.c`) 
 
 ```c
 pthread_mutex_lock(&mutex);
@@ -215,11 +209,11 @@ pthread_mutex_unlock(&mutex);
 
 | Expected | Actual |
 |:---:|:---:|
-| 400000 | **400000** ✅ |
+| 400000 | **400000**|
 
 ---
 
-## 🧶 Part B — OpenMP
+## Part B — OpenMP
 
 OpenMP is a **higher-level** model based on compiler directives:
 `#pragma omp parallel` · `parallel for` · `critical` · `barrier` · `reduction`
@@ -254,15 +248,15 @@ Hello from Thread 0 of 32
 
 Result: `Total sum = 360`
 
-### Step 8 — OpenMP race condition (`omp_race.c`) 🐛
+### Step 8 — OpenMP race condition (`omp_race.c`) 
 
 OpenMP creates threads for you but **does not make shared data safe automatically**.
 
 | Expected | Actual |
 |:---:|:---:|
-| 400000 | ~100000 ❌ (varies with timing) |
+| 400000 | ~100000 (varies with timing) |
 
-### Step 9 — Fix with `critical` (`omp_critical.c`) 🔒
+### Step 9 — Fix with `critical` (`omp_critical.c`)
 
 ```c
 #pragma omp critical
@@ -273,9 +267,9 @@ OpenMP creates threads for you but **does not make shared data safe automaticall
 
 | Expected | Actual |
 |:---:|:---:|
-| 400000 | **400000** ✅ |
+| 400000 | **400000** |
 
-### Step 10 — Barrier (`omp_barrier.c`) 🚧
+### Step 10 — Barrier (`omp_barrier.c`)
 
 ```text
 Thread 1 -- Stage 1 --|
@@ -290,7 +284,7 @@ Every "completed Stage 1" message appears **before** any "started Stage 2" messa
 
 ---
 
-## 📊 Part C — Performance Analysis
+## Part C — Performance Analysis
 
 **Workload:** summing `i * 0.000001` for `i = 0 … 1,000,000,000` (N = 10⁹).
 Expected result: `499999999500.00`
@@ -346,14 +340,14 @@ $$\text{Efficiency} = \frac{\text{Speedup}}{\text{Number of Threads}} \times 100
 
 ![Efficiency vs Threads](graphs/efficiency.png)
 
-### 🔍 Observations
+### Observations
 
 - Execution time falls steadily as threads increase, for both libraries.
 - With **16 threads**: Pthreads ≈ **9.35×**, OpenMP ≈ **9.62×** faster than sequential.
 - Efficiency stays above ~93% up to 6 threads, then drops to ~60% at 16 threads.
 - Pthreads and OpenMP perform almost identically on this workload — OpenMP achieves similar results with far less code.
 
-### ❓ Why isn't 16 threads 16× faster?
+### Why isn't 16 threads 16× faster?
 
 Ideal time would be 1.35 / 16 ≈ **0.084 s**, but the measured OpenMP time was **0.141 s**. Real parallel programs carry overhead:
 
@@ -368,7 +362,7 @@ Ideal time would be 1.35 / 16 ≈ **0.084 s**, but the measured OpenMP time was 
 
 ---
 
-## ⚖️ Pthreads vs OpenMP
+##  Pthreads vs OpenMP
 
 | Concept | Pthreads | OpenMP |
 |---|---|---|
@@ -381,7 +375,7 @@ Ideal time would be 1.35 / 16 ≈ **0.084 s**, but the measured OpenMP time was 
 
 ---
 
-## 📖 Key Terms
+## Key Terms
 
 | Term | Meaning |
 |---|---|
@@ -400,7 +394,7 @@ Ideal time would be 1.35 / 16 ≈ **0.084 s**, but the measured OpenMP time was 
 
 ---
 
-## 🗺️ Learning Flow
+## Learning Flow
 
 ```mermaid
 flowchart TD
@@ -424,7 +418,7 @@ flowchart TD
 
 ---
 
-## ✅ Conclusion
+## Conclusion
 
 This experiment showed how multithreaded programs are built with **Pthreads** (explicit control over creation, joining and mutexes) and **OpenMP** (parallel regions, work sharing, critical sections, barriers, reductions).
 
