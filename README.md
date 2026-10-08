@@ -27,7 +27,7 @@
 
 ---
 
-## 🎯 Aim
+## Aim
 
 To develop multithreaded programs using **Pthreads** and **OpenMP**, and to understand:
 
@@ -61,7 +61,7 @@ Several threads work on different parts of the same problem — that is **parall
 
 ---
 
-## 🖥️ Software Environment
+## Software Environment
 
 | Component | Details |
 |---|---|
